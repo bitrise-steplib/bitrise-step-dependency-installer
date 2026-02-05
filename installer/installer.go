@@ -31,6 +31,11 @@ func installRegularToolFile(toolVersionFile string, verboseMode bool, commandExe
 }
 
 func installBitriseYML(toolVersionFile string, workflow string, verboseMode bool, commandExecutor ExecCommandFunc) ([]byte, error) {
+	// Validate bitrise.yml before installing
+	if err := validateBitriseYML(toolVersionFile, verboseMode, commandExecutor); err != nil {
+		return nil, err
+	}
+
 	workflowArg := ""
 	if workflow == "" {
 		if verboseMode {
@@ -45,6 +50,25 @@ func installBitriseYML(toolVersionFile string, workflow string, verboseMode bool
 
 	command := commandExecutor("bitrise", "tools", "setup", "--config", toolVersionFile, workflowArg)
 	return runCommand(verboseMode, command)
+}
+
+func validateBitriseYML(toolVersionFile string, verboseMode bool, commandExecutor ExecCommandFunc) error {
+	if verboseMode {
+		fmt.Printf("Validating %s\n", toolVersionFile)
+	}
+
+	command := commandExecutor("bitrise", "validate", "--config", toolVersionFile)
+	output, err := command.CombinedOutput()
+
+	if err != nil {
+		return fmt.Errorf("bitrise.yml validation failed: %s\n%s", err, string(output))
+	}
+
+	if verboseMode {
+		fmt.Printf("Validation passed for %s\n", toolVersionFile)
+	}
+
+	return nil
 }
 
 func runCommand(verboseMode bool, cmd *exec.Cmd) ([]byte, error) {
