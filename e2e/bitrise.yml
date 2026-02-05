@@ -1,0 +1,113 @@
+---
+format_version: "13"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+
+
+workflows:
+  test_tool_versions:
+    title: E2E - Single .tool-versions file
+    description: Tests installing from a .tool-versions file with multiple tools
+    steps:
+      - generate-text-file@0:
+          inputs:
+            - file_name: .tool-versions
+            - file_content: golang 1.21.5
+      - path::./:
+          title: Run dependency installer
+          inputs:
+            - tool_version_file_list: .tool-versions
+            - verbose: "true"
+      - script:
+          title: Verify tool installation
+          inputs:
+            - content: |
+                #!/bin/bash
+                set -ex
+
+                actual=$(go version | awk '{print $3}')
+                if [[ "$actual" != "go1.21.5" ]]; then
+                  echo "ERROR: Expected Go 1.21.5 but got $actual"
+                  exit 1
+                fi
+
+  test_bitrise_yml_no_workflow:
+    title: E2E - bitrise.yml without workflow
+    description: Tests installing from a bitrise.yml with global tools
+    steps:
+      - generate-text-file@0:
+          inputs:
+            - file_name: tmp/bitrise.yml
+            - file_content: >-
+                ---
+
+                format_version: "17"
+
+                default_step_lib_source:
+                https://github.com/bitrise-io/bitrise-steplib.git
+
+                project_type: other
+
+
+                tools:
+                  golang: 1.21.5
+      - path::./:
+          title: Run dependency installer
+          inputs:
+            - tool_version_file_list: bitrise.yml
+            - verbose: "true"
+      - script:
+          title: Verify tool installation
+          inputs:
+            - content: |
+                #!/bin/bash
+                set -ex
+
+                actual=$(go version | awk '{print $3}')
+                if [[ "$actual" != "go1.21.5" ]]; then
+                  echo "ERROR: Expected Go 1.21.5 but got $actual"
+                  exit 1
+                fi
+
+  test_bitrise_yml_with_workflow:
+    title: E2E - bitrise.yml with workflow
+    description: Tests installing from bitrise.yml with workflow tools
+    steps:
+      - generate-text-file@0:
+          inputs:
+            - file_name: tmp/bitrise.yml
+            - file_content: >-
+                ---
+
+                format_version: "17"
+
+                default_step_lib_source:
+                https://github.com/bitrise-io/bitrise-steplib.git
+
+                project_type: other
+
+
+                tools:
+                  golang: 1.21.5
+
+                workflows:
+                  test:
+                    tools:
+                      golang: 1.21.4
+      - path::./:
+          title: Run dependency installer
+          inputs:
+            - tool_version_file_list: bitrise.yml
+            - bitrise_workflow_id_list: test
+            - verbose: "true"
+      - script:
+          title: Verify tool installation
+          inputs:
+            - content: |
+                #!/bin/bash
+                set -ex
+
+                actual=$(go version | awk '{print $3}')
+                if [[ "$actual" != "go1.21.4" ]]; then
+                  echo "ERROR: Expected Go 1.21.4 but got $actual"
+                  exit 1
+                fi
