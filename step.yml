@@ -81,14 +81,12 @@ toolkit:
 
 
 inputs:
-  - tool_version_file_list: .tool-versions
+  - tool_version_file: .tool-versions
     opts:
-      title: "Tool Version File Paths"
-      summary: A newline (\n) separated list of tool version file paths.
+      title: "Tool Version File Path"
+      summary: The tool version file path.
       description: |
-        A newline (\n) separated list of tool version file paths. See the step description for the list of supported tool version files.
-
-        Note: only a single bitrise.yml file can be provided.
+        The tool version file contains the version(s) of the tool(s) for the step to install. See the step description for the list of supported tool version files.
       is_expand: false
       is_required: true
       value_options: []
@@ -103,24 +101,13 @@ inputs:
       value_options:
         - true
         - false
-  - output_format: plaintext
-      title: "Output Format"
-      summary: The format of the output logs (json, plaintext, bash)
-      description: |
-        The format of the output logs (json, plaintext, bash)
-      is_expand: false
-      is_required: false
-      value_options:
-        - json
-        - plaintext
-        - bash
-  - bitrise_workflow_id_list: ""
+  - bitrise_workflow_id: ""
     opts:
-      title: "Bitrise Workflow ID List"
-      summary: A newline (\n) separated list of Bitrise Workflow IDs.
+      title: "Bitrise Workflow ID"
+      summary: The Bitrise Workflow ID to use for installing tools. Optional.
       description: |
         This input is only used when passing a bitrise.yml file as a tool version file and rather than using the global `tools:` block, you want to use the `tools:` block defined under specific workflows.
-        The step accepts a newline (\n) separated list of Bitrise Workflow IDs to target.
+        The step accepts a workflow ID and installs the tools defined under that workflow's `tools:` block.
       is_expand: false
       is_required: false
       value_options: []

@@ -8,75 +8,48 @@ import (
 
 type ExecCommandFunc func(name string, args ...string) *exec.Cmd
 
-type InstallerResult struct {
-	ToolInstallerDescription string
-	Output                   []byte
-	Err                      error
-}
-
-type ToolInstaller interface {
-	Install() ([]byte, error)
-	Description() string
-}
-
 const (
 	BitriseYMLFileName = "bitrise.yml"
 )
 
-type InstallerManager struct {
-	installerFactory InstallerFactory
-}
+func Install(toolVersionFile string, workflow string, verboseMode bool, commandExecutor ExecCommandFunc) ([]byte, error) {
 
-func NewInstallerManager(factory InstallerFactory) *InstallerManager {
-	return &InstallerManager{
-		installerFactory: factory,
+	if strings.HasSuffix(toolVersionFile, BitriseYMLFileName) {
+		return installBitriseYML(toolVersionFile, workflow, verboseMode, commandExecutor)
+	} else {
+		return installRegularToolFile(toolVersionFile, verboseMode, commandExecutor)
 	}
 }
 
-func (m *InstallerManager) InstallAll(toolVersionFileList []string, workflowList []string, outputFormat string, verboseMode bool) ([]InstallerResult, error) {
-	var toolInstallers []ToolInstaller
-	bitriseCount := 0
+func installRegularToolFile(toolVersionFile string, verboseMode bool, commandExecutor ExecCommandFunc) ([]byte, error) {
+	if verboseMode {
+		fmt.Printf("Installing tools from %s\n", toolVersionFile)
+	}
 
-	for _, filePath := range toolVersionFileList {
-		if filePath == "" {
-			continue
+	command := commandExecutor("bitrise", "tools", "setup", "--config", toolVersionFile)
+	return runCommand(verboseMode, command)
+}
+
+func installBitriseYML(toolVersionFile string, workflow string, verboseMode bool, commandExecutor ExecCommandFunc) ([]byte, error) {
+	workflowArg := ""
+	if workflow == "" {
+		if verboseMode {
+			fmt.Printf("Installing tools from %s global tools block\n", toolVersionFile)
 		}
-
-		switch {
-		case strings.HasSuffix(filePath, BitriseYMLFileName):
-			bitriseCount++
-			if bitriseCount > 1 {
-				return nil, fmt.Errorf("multiple bitrise.yml files detected in the input list, only one is allowed")
-			}
-			bitriseInstallers := createBitriseInstallers(m.installerFactory, filePath, workflowList, outputFormat, verboseMode)
-			toolInstallers = append(toolInstallers, bitriseInstallers...)
-		default:
-			toolInstaller := m.installerFactory.CreateRegularInstaller(filePath, outputFormat, verboseMode)
-			toolInstallers = append(toolInstallers, toolInstaller)
+	} else {
+		workflowArg = "--workflow " + workflow
+		if verboseMode {
+			fmt.Printf("Installing tools from %s workflow %s\n", toolVersionFile, workflow)
 		}
 	}
 
-	var results []InstallerResult
-	for _, installer := range toolInstallers {
-		output, err := installer.Install()
-		results = append(results, InstallerResult{
-			ToolInstallerDescription: installer.Description(),
-			Output:                   output,
-			Err:                      err,
-		})
-	}
-	return results, nil
+	command := commandExecutor("bitrise", "tools", "setup", "--config", toolVersionFile, workflowArg)
+	return runCommand(verboseMode, command)
 }
 
-func createBitriseInstallers(factory InstallerFactory, toolVersionFile string, workflowList []string, outputFormat string, verboseMode bool) []ToolInstaller {
-	if len(workflowList) == 0 {
-		return []ToolInstaller{factory.CreateBitriseInstaller(toolVersionFile, "", outputFormat, verboseMode)}
+func runCommand(verboseMode bool, cmd *exec.Cmd) ([]byte, error) {
+	if verboseMode {
+		fmt.Printf("Running command: %s %s\n", cmd.Path, strings.Join(cmd.Args, " "))
 	}
-
-	var installers []ToolInstaller
-	for _, workflow := range workflowList {
-		installer := factory.CreateBitriseInstaller(toolVersionFile, workflow, outputFormat, verboseMode)
-		installers = append(installers, installer)
-	}
-	return installers
+	return cmd.CombinedOutput()
 }
