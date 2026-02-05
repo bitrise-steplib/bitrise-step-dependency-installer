@@ -2,7 +2,6 @@
 format_version: "13"
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 
-
 workflows:
   test_tool_versions:
     title: E2E - Single .tool-versions file
@@ -17,18 +16,10 @@ workflows:
           inputs:
             - tool_version_file_list: .tool-versions
             - verbose: "true"
-      - script:
-          title: Verify tool installation
+      - bundle::verify_install:
           inputs:
-            - content: |
-                #!/bin/bash
-                set -ex
-
-                actual=$(go version | awk '{print $3}')
-                if [[ "$actual" != "go1.21.5" ]]; then
-                  echo "ERROR: Expected Go 1.21.5 but got $actual"
-                  exit 1
-                fi
+            - TOOL: go
+            - VERSION: 1.21.5
 
   test_bitrise_yml_no_workflow:
     title: E2E - bitrise.yml without workflow
@@ -53,20 +44,12 @@ workflows:
       - path::./:
           title: Run dependency installer
           inputs:
-            - tool_version_file_list: bitrise.yml
+            - tool_version_file_list: tmp/bitrise.yml
             - verbose: "true"
-      - script:
-          title: Verify tool installation
+      - bundle::verify_install:
           inputs:
-            - content: |
-                #!/bin/bash
-                set -ex
-
-                actual=$(go version | awk '{print $3}')
-                if [[ "$actual" != "go1.21.5" ]]; then
-                  echo "ERROR: Expected Go 1.21.5 but got $actual"
-                  exit 1
-                fi
+            - TOOL: go
+            - VERSION: 1.21.5
 
   test_bitrise_yml_with_workflow:
     title: E2E - bitrise.yml with workflow
@@ -96,9 +79,16 @@ workflows:
       - path::./:
           title: Run dependency installer
           inputs:
-            - tool_version_file_list: bitrise.yml
+            - tool_version_file_list: tmp/bitrise.yml
             - bitrise_workflow_id_list: test
             - verbose: "true"
+      - bundle::verify_install:
+          inputs:
+            - TOOL: go
+            - VERSION: 1.21.4
+step_bundles:
+  verify_install:
+    steps:
       - script:
           title: Verify tool installation
           inputs:
@@ -106,8 +96,7 @@ workflows:
                 #!/bin/bash
                 set -ex
 
-                actual=$(go version | awk '{print $3}')
-                if [[ "$actual" != "go1.21.4" ]]; then
-                  echo "ERROR: Expected Go 1.21.4 but got $actual"
-                  exit 1
-                fi
+                mise list go | grep 1.21.5
+    inputs:
+      - TOOL: go
+      - VERSION: 1.1.1

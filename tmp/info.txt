@@ -1,0 +1,1 @@
+This tmp directory exists for e2e tests found at e2e/bitrise.yml
