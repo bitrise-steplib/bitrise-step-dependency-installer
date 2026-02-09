@@ -10,16 +10,16 @@ workflows:
       - generate-text-file@0:
           inputs:
             - file_name: .tool-versions
-            - file_content: golang 1.21.5
+            - file_content: nodejs 20.11.1
       - path::./:
           title: Run dependency installer
           inputs:
-            - tool_version_file_list: .tool-versions
+            - tool_version_file: .tool-versions
             - verbose: "true"
       - bundle::verify_install:
           inputs:
-            - TOOL: go
-            - VERSION: 1.21.5
+            - TOOL: node
+            - VERSION: v20.11.1
 
   test_bitrise_yml_no_workflow:
     title: E2E - bitrise.yml without workflow
@@ -40,16 +40,16 @@ workflows:
 
 
                 tools:
-                  golang: 1.21.5
+                  nodejs: 20.11.1
       - path::./:
           title: Run dependency installer
           inputs:
-            - tool_version_file_list: tmp/bitrise.yml
+            - tool_version_file: tmp/bitrise.yml
             - verbose: "true"
       - bundle::verify_install:
           inputs:
-            - TOOL: go
-            - VERSION: 1.21.5
+            - TOOL: node
+            - VERSION: v20.11.1
 
   test_bitrise_yml_with_workflow:
     title: E2E - bitrise.yml with workflow
@@ -70,22 +70,22 @@ workflows:
 
 
                 tools:
-                  golang: 1.21.5
+                  nodejs: 20.11.0
 
                 workflows:
                   test:
                     tools:
-                      golang: 1.21.4
+                      nodejs: 20.11.1
       - path::./:
           title: Run dependency installer
           inputs:
-            - tool_version_file_list: tmp/bitrise.yml
-            - bitrise_workflow_id_list: test
+            - tool_version_file: tmp/bitrise.yml
+            - bitrise_workflow_id: test
             - verbose: "true"
       - bundle::verify_install:
           inputs:
-            - TOOL: go
-            - VERSION: 1.21.4
+            - TOOL: node
+            - VERSION: v20.11.1
 step_bundles:
   verify_install:
     steps:
@@ -96,7 +96,11 @@ step_bundles:
                 #!/bin/bash
                 set -ex
 
-                mise list go | grep 1.21.5
+                actual_version=$(node --version)
+                if [[ "$VERSION" != "${actual_version}" ]]; then
+                  echo "Expected ${VERSION}. Got ${actual_version}"
+                  exit 1
+                fi
     inputs:
       - TOOL: go
       - VERSION: 1.1.1
