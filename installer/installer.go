@@ -36,19 +36,18 @@ func installBitriseYML(toolVersionFile string, workflow string, verboseMode bool
 		return nil, err
 	}
 
-	workflowArg := ""
+	command := commandExecutor("bitrise", "tools", "setup", "--config", toolVersionFile)
 	if workflow == "" {
 		if verboseMode {
 			fmt.Printf("Installing tools from %s global tools block\n", toolVersionFile)
 		}
 	} else {
-		workflowArg = "--workflow " + workflow
+		command.Args = append(command.Args, "--workflow", workflow)
 		if verboseMode {
 			fmt.Printf("Installing tools from %s workflow %s\n", toolVersionFile, workflow)
 		}
 	}
 
-	command := commandExecutor("bitrise", "tools", "setup", "--config", toolVersionFile, workflowArg)
 	return runCommand(verboseMode, command)
 }
 
@@ -73,7 +72,7 @@ func validateBitriseYML(toolVersionFile string, verboseMode bool, commandExecuto
 
 func runCommand(verboseMode bool, cmd *exec.Cmd) ([]byte, error) {
 	if verboseMode {
-		fmt.Printf("Running command: %s %s\n", cmd.Path, strings.Join(cmd.Args, " "))
+		fmt.Printf("Running command: %s %s\n", cmd.Path, strings.Join(cmd.Args[1:], " "))
 	}
 	return cmd.CombinedOutput()
 }
