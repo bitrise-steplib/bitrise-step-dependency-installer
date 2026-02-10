@@ -44,7 +44,7 @@ inputs:
       list of supported tool version files.
     is_expand: false
     is_required: true
-- verbose: false
+- verbose: "false"
   opts:
     title: Verbose Output
     summary: Enable verbose output for debugging.

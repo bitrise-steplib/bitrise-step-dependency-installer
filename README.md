@@ -40,7 +40,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 | Key | Description | Flags | Default |
 | --- | --- | --- | --- |
 | `tool_version_file` | The tool version file contains the version(s) of the tool(s) for the step to install. See the step description for the list of supported tool version files.  | required | `.tool-versions` |
-| `verbose` | If enabled, the step will output additional debug information during execution.  |  | `false` |
+| `verbose` | If enabled, the step will output additional debug information during execution. Set to "true" for verbose logging.  |  | `false` |
 | `bitrise_workflow_id` | This input is only used when passing a bitrise.yml file as a tool version file and rather than using the global `tools:` block, you want to use the `tools:` block defined under specific workflows. The step accepts a workflow ID and installs the tools defined under that workflow's `tools:` block.  |  |  |
 </details>
 
