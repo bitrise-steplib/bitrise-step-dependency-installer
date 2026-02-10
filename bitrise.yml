@@ -17,4 +17,4 @@ workflows:
     steps:
     - git::https://github.com/bitrise-steplib/steps-check.git:
         inputs:
-          - workflow: e2e
+        - workflow: e2e

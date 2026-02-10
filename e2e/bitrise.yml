@@ -40,8 +40,8 @@ workflows:
     - path::./:
         title: Run dependency installer
         inputs:
-          - tool_version_file: tmp/bitrise.yml
-          - verbose: "true"
+        - tool_version_file: tmp/bitrise.yml
+        - verbose: "true"
     - bundle::verify_install:
         inputs:
         - TOOL: node
