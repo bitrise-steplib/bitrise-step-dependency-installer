@@ -4,7 +4,6 @@
 
 Installs dependencies from tool version files in your repo.
 
-
 <details>
 <summary>Description</summary>
 
