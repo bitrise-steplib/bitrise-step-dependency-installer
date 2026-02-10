@@ -28,16 +28,12 @@ workflows:
       - generate-text-file@0:
           inputs:
             - file_name: tmp/bitrise.yml
-            - file_content: >-
+            - file_content: |-
                 ---
-
                 format_version: "17"
-
                 default_step_lib_source:
                 https://github.com/bitrise-io/bitrise-steplib.git
-
                 project_type: other
-
 
                 tools:
                   nodejs: 20.11.1
@@ -58,16 +54,12 @@ workflows:
       - generate-text-file@0:
           inputs:
             - file_name: tmp/bitrise.yml
-            - file_content: >-
+            - file_content: |-
                 ---
-
                 format_version: "17"
-
                 default_step_lib_source:
                 https://github.com/bitrise-io/bitrise-steplib.git
-
                 project_type: other
-
 
                 tools:
                   nodejs: 20.11.0
