@@ -36,18 +36,19 @@ func installBitriseYML(toolVersionFile string, workflow string, verboseMode bool
 		return nil, err
 	}
 
-	command := commandExecutor("bitrise", "tools", "setup", "--config", toolVersionFile)
+	cmdArgs := []string{"tools", "setup", "--config", toolVersionFile}
 	if workflow == "" {
 		if verboseMode {
 			fmt.Printf("Installing tools from %s global tools block\n", toolVersionFile)
 		}
 	} else {
-		command.Args = append(command.Args, "--workflow", workflow)
+		cmdArgs = append(cmdArgs, "--workflow", workflow)
 		if verboseMode {
 			fmt.Printf("Installing tools from %s workflow %s\n", toolVersionFile, workflow)
 		}
 	}
 
+	command := commandExecutor("bitrise", cmdArgs...)
 	return runCommand(verboseMode, command)
 }
 
