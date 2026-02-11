@@ -20,18 +20,18 @@ description: |
   * .kubectl-version
   * bitrise.yml (with a `tools:` section)
 
-website: https://github.com/bitrise-io/bitrise-step-dependency-installer
+website: https://github.com/bitrise-steplib/bitrise-step-dependency-installer
 source_code_url: >-
-  https://github.com/bitrise-io/bitrise-step-dependency-installer
+  https://github.com/bitrise-steplib/bitrise-step-dependency-installer
 support_url: >-
-  https://github.com/bitrise-io/bitrise-step-dependency-installer/issues
+  https://github.com/bitrise-steplib/bitrise-step-dependency-installer/issues
 
 type_tags:
 - installer
 
 toolkit:
   go:
-    package_name: github.com/bitrise-io/bitrise-step-dependency-installer
+    package_name: github.com/bitrise-steplib/bitrise-step-dependency-installer
 
 inputs:
 - tool_version_file: .tool-versions
@@ -42,7 +42,7 @@ inputs:
       The tool version file contains the version(s) of the tool(s)
       for the step to install. See the step description for the
       list of supported tool version files.
-    is_expand: false
+    is_expand: true
     is_required: true
 - verbose: "false"
   opts:
@@ -52,7 +52,7 @@ inputs:
       If enabled, the step will output additional debug
       information during execution.
     is_expand: false
-    is_required: false
+    is_required: true
     value_options:
     - "true"
     - "false"
@@ -60,7 +60,7 @@ inputs:
   opts:
     title: Bitrise Workflow ID
     summary: >-
-      The Bitrise Workflow ID to use for installing tools. Optional.
+      The Bitrise Workflow ID to use for installing tools.
     description: |
       This input is only used when passing a bitrise.yml file as a
       tool version file and rather than using the global `tools:`
@@ -68,5 +68,5 @@ inputs:
       specific workflows. The step accepts a workflow ID and
       installs the tools defined under that workflow's `tools:`
       block.
-    is_expand: false
+    is_expand: true
     is_required: false
