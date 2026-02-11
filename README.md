@@ -1,6 +1,6 @@
 # Dependency Installer
 
-[![Step changelog](https://shields.io/github/v/release/bitrise-io/bitrise-step-dependency-installer?include_prereleases&label=changelog&color=blueviolet)](https://github.com/bitrise-io/bitrise-step-dependency-installer/releases)
+[![Step changelog](https://shields.io/github/v/release/bitrise-steplib/bitrise-step-dependency-installer?include_prereleases&label=changelog&color=blueviolet)](https://github.com/bitrise-steplib/bitrise-step-dependency-installer/releases)
 
 Installs dependencies from tool version files in your repo.
 
@@ -40,7 +40,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 | Key | Description | Flags | Default |
 | --- | --- | --- | --- |
 | `tool_version_file` | The tool version file contains the version(s) of the tool(s) for the step to install. See the step description for the list of supported tool version files.  | required | `.tool-versions` |
-| `verbose` | If enabled, the step will output additional debug information during execution.  |  | `false` |
+| `verbose` | If enabled, the step will output additional debug information during execution.  | required | `false` |
 | `bitrise_workflow_id` | This input is only used when passing a bitrise.yml file as a tool version file and rather than using the global `tools:` block, you want to use the `tools:` block defined under specific workflows. The step accepts a workflow ID and installs the tools defined under that workflow's `tools:` block.  |  |  |
 </details>
 
@@ -51,7 +51,7 @@ There are no outputs defined in this step
 
 ## 🙋 Contributing
 
-We welcome [pull requests](https://github.com/bitrise-io/bitrise-step-dependency-installer/pulls) and [issues](https://github.com/bitrise-io/bitrise-step-dependency-installer/issues) against this repository.
+We welcome [pull requests](https://github.com/bitrise-steplib/bitrise-step-dependency-installer/pulls) and [issues](https://github.com/bitrise-steplib/bitrise-step-dependency-installer/issues) against this repository.
 
 For pull requests, work on your changes in a forked repository and use the Bitrise CLI to [run step tests locally](https://docs.bitrise.io/en/bitrise-ci/bitrise-cli/running-your-first-local-build-with-the-cli.html).
 
