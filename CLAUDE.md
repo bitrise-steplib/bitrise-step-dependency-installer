@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a Bitrise Step that wraps the Bitrise CLI tool to install dependencies defined in tool version files. It supports multiple tool version file formats including `.tool-versions`, `.ruby-version`, `.node-version`, `.python-version`, `.java-version`, `.go-version`, `.terraform-version`, `.kubectl-version`, and `bitrise.yml` files with a `tools:` section.
+This is a Bitrise Step that wraps the Bitrise CLI tool to install dependencies defined in tool version files. It supports multiple tool version file formats including `.tool-versions`, `.ruby-version`, `.node-version`, `.nvmrc`, `package.json` (`engines.node`), `.python-version`, `.java-version`, `.go-version`, `.terraform-version`, `.kubectl-version`, `.fvmrc`, `.fvm/fvm_config.json`, and `bitrise.yml` files with a `tools:` section.
 
 ## Development Commands
 
