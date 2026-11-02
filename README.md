@@ -17,11 +17,14 @@ Tool version files supported by this step include:
 * .tool-versions
 * .ruby-version
 * .node-version
+* .nvmrc
+* package.json (the `engines.node` field)
 * .python-version
 * .java-version
 * .go-version
 * .terraform-version
 * .kubectl-version
+* .fvmrc and .fvm/fvm_config.json (Flutter)
 * bitrise.yml (with a `tools:` section)
 
 </details>
